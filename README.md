@@ -19,13 +19,15 @@ Installing with pip:
 Basic Usage
 -----------
 
-Tor Seeker provides two simple methods for querying information:
+Tor Seeker provides two simple methods for querying information.
 
-1. Query all Tor relays in a single country. The following example shows how to use `-c` option with the two letter country code for Costa Rica: 
 
-.. code-block: bash
+**Query all Tor relays in a single country**
 
-    $ torseeker -c cr
+
+The following example shows how to use `-c` option with the two letter country code for Costa Rica: 
+
+	$ torseeker -c cr
 
 	  ______           _____           __            
 	 /_  __/___  _____/ ___/___  ___  / /_____  _____
@@ -42,8 +44,6 @@ Tor Seeker provides two simple methods for querying information:
 	Exit relays: 5
 
 Using the same command, use the `-d` option to get additional information about the relays:
-
-.. code-block: bash
 
     $ torseeker -c cr -d
 
@@ -86,9 +86,10 @@ Using the same command, use the `-d` option to get additional information about 
 	190.10.8.166    | Port: 443, Nickname: Donatello, Country: Costa Rica, First seen: 2021-03-12 20:00:00, Last seen: 2022-02-13 03:00:00, Last restarted: 2022-01-04 22:48:54
 
 
-2. Query for one or more Tor relays via IP address. The following example shows how to use `--ip` option with the two Tor relay IP addresses: 
+**Query for one or more Tor relays via IP address**
 
-.. code-block: bash
+
+The following example shows how to use `--ip` option with the two Tor relay IP addresses: 
 
     $ torseeker --ip 138.59.18.106 190.10.8.166
 
@@ -106,8 +107,6 @@ Using the same command, use the `-d` option to get additional information about 
 	Exit relays: 1
 
 Using the same command, use the `-d` option to get additional information about the relays:
-
-.. code-block: bash
 
     $ torseeker --ip 138.59.18.106 190.10.8.166 -d
 
@@ -143,8 +142,8 @@ Using the same command, use the `-d` option to get additional information about 
 Contributions
 -------------
 
-#. Check for open issues before submitting a feature or bug.
-#. Create a new issue to start a discussion around a new feature or a bug.
+1. Check for open issues before submitting a feature or bug.
+2. Create a new issue to start a discussion around a new feature or a bug.
 
 
 License
