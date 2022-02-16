@@ -11,8 +11,6 @@ Installation
 
 Installing with pip:
 
-.. code:: bash
-
     $ pip install torseeker
 
 
