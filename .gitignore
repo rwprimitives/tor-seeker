@@ -6,9 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# Compressed files
+*.tar.gz
+
 # Distribution / packaging
 .Python
 build/
+deb_dist/
 develop-eggs/
 dist/
 downloads/
