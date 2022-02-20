@@ -19,7 +19,7 @@ install-deb: build-deb
 	sudo dpkg -i deb_dist/python3-torseeker*.deb
 
 uninstall-pip:
-	python3 -m pip uninstall ${PACKAGE} -y
+	pip uninstall ${PACKAGE} -y
 
 uninstall-deb:
 	sudo dpkg -r python3-torseeker
