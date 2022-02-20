@@ -24,15 +24,28 @@ __author__      = "eldiablo"
 __email__       = "avsarria@gmail.com"
 __url__         = "http://github.com/rwprimitives/tor-seeker"
 __bug_tracker__ = "https://github.com/rwprimitives/tor-seeker/issues"
-__date__        = "11/06/2021"
-__copyright__   = "Copyright (c) 2021 rwprimitives"
+__date__        = "02/20/2022"
+__copyright__   = "Copyright (c) 2022 rwprimitives"
 __description__ = "A tool used to query information about Tor relays " \
                   "by using a two letter country code or via Tor IP "  \
                   "addresses."
 
 
 class TorNode:
+    """
+    The TorNode class defines a Tor relay.
+
+    :param raw_data: a dictionary containing information about a Tor relay
+    :type: dict
+    """
+
     def __init__(self, raw_data):
+        """Constructor method.
+
+        :param raw_data: a dictionary containing information about a Tor relay
+        :type: dict
+        """
+
         self.raw_data_ = raw_data
         self.first_seen = raw_data["first_seen"]
         self.last_seen = raw_data["last_seen"]
@@ -73,6 +86,16 @@ class TorNode:
 
 
 class TorSeeker:
+    """
+    The TorSeeker class provides two methods for querying information about Tor
+    relays: two letter country code, one or multiple Tor IP addresses.
+    Once a query is performed, Tor relays are stored in separate lists based on
+    the type of relay, ie: Guard, Middle or Exit.
+
+    :param country: optional two letter country code
+    :type: str
+    """
+
     # URL used for querying information about tor nodes
     TOR_QUERY_URL = "https://onionoo.torproject.org/details?"
 
@@ -104,6 +127,12 @@ class TorSeeker:
                      "VE", "VN", "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
 
     def __init__(self, country=None):
+        """Constructor method.
+
+        :param country: optional two letter country code
+        :type: str
+        """
+
         self.country = country
         self.country_name = ""
         self.json_data = ""
@@ -170,6 +199,18 @@ class TorSeeker:
         return status
 
     def query_relays_by_country(self, country=None):
+        """Query for Tor relays based a two letter country code.
+        This function performs input validation and verifies the
+        two letter country code is valid.
+
+        :param country: a two letter country code. This is optional if a country
+                        code was defined via the constructor of this class
+        :type: str
+
+        :returns: 1 on successful query, 0 otherwise
+        :rtype: int
+        """
+
         status = 0
         ret = 0
 
@@ -190,6 +231,17 @@ class TorSeeker:
         return status
 
     def query_relays_by_ip(self, ip_addresses=None):
+        """Query for Tor relays based on one or multiple Tor IP addresses.
+        This functions performs some input validation, but does not verify
+        that the IP addresses provided are valid IPv4 or IPv6 format.
+
+        :param ip_addresses: a list of Tor IP addresses
+        :type: list
+
+        :returns: 1 on successful query, 0 otherwise
+        :rtype: int
+        """
+
         status = 0
         ret = 0
 
@@ -210,15 +262,42 @@ class TorSeeker:
         return status
 
     def get_all_relays(self):
+        """Returns a list of TorNode objects for all Tor relay types.
+
+        :returns: a list storing TorNode objects as elements,
+                  None otherwise
+        :rtype: list
+        """
+
         return self.all_relays
 
     def get_guard_relays(self):
+        """Returns a list of TorNode objects for Tor Guard relay types.
+
+        :returns: a list storing TorNode objects as elements,
+                  None otherwise
+        :rtype: list
+        """
+
         return self.guard_relays
 
     def get_middle_relays(self):
+        """Returns a list of TorNode objects for Tor Middle relay types.
+
+        :returns: a list storing TorNode objects as elements,
+                  None otherwise
+        :rtype: list
+        """
+
         return self.middle_relays
 
     def get_exit_relays(self):
+        """Returns a list of TorNode objects for Tor Exit relay types.
+
+        :returns: a list storing TorNode objects as elements
+        :rtype: list
+        """
+
         return self.exit_relays
 
 
@@ -247,28 +326,20 @@ def get_banner():
 def get_version_info():
     info = get_banner()
     info += "\n"
-    info += f"{__name__} v{__version__} \n"
+    info += f"{__package__} v{__version__} \n"
     info += f"{__copyright__} \n"
     info += f"{__license__} \n"
     info += f"Written by {__author__}"
     return info
 
 
-def print_light_info():
-    print(get_banner())
-    print(f"{__version__} by {__author__}")
-    print()
-
-
 def parse_args():
-    ''' Setup arguments as mutual exclusion.
-    '''
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=__description__)
 
     parser.add_argument("-d", "--details",
-                        help="Show additional information about a Tor relay",
+                        help="show additional information",
                         dest="details",
                         action="store_true",
                         required=False)
@@ -276,40 +347,45 @@ def parse_args():
                         action="version",
                         version=get_version_info())
 
+    # set -c and --ip arguments as mutual exclusion
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-c", "--country",
-                       help="Two letter country code of interest.",
+                       help="two letter country code of interest.",
                        dest="country",
                        type=str,
+                       metavar='',
                        required=False)
     group.add_argument("--ip",
-                       help="One or multiple tor IP addresses comma separated",
+                       help="one or more tor IP addresses spaced separated",
                        dest="ip_addresses",
                        type=str,
+                       metavar='',
                        nargs='+',
                        required=False)
     return parser.parse_args()
 
 
 def main():
-    status = -1
+    ret = -1
 
     args = parse_args()
 
-    print_light_info()
+    print(get_banner())
+    print(f"{__version__} by {__author__}")
+    print()
 
     tor_seeker = TorSeeker()
 
     if args.country:
-        status = tor_seeker.query_relays_by_country(args.country)
+        ret = tor_seeker.query_relays_by_country(args.country)
 
-        if status and len(tor_seeker.country_name):
+        if ret and len(tor_seeker.country_name):
             print(f"Country: {tor_seeker.country_name}")
 
     elif args.ip_addresses:
-        status = tor_seeker.query_relays_by_ip(args.ip_addresses)
+        ret = tor_seeker.query_relays_by_ip(args.ip_addresses)
 
-    if status > 0:
+    if ret > 0:
         print(f"Total relays: {len(tor_seeker.get_all_relays())}")
         print(f"Guard relays: {len(tor_seeker.get_guard_relays())}")
         print(f"Middle relays: {len(tor_seeker.get_middle_relays())}")
