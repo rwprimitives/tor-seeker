@@ -245,7 +245,7 @@ class TorSeeker:
         status = 0
         ret = 0
 
-        if ip_addresses is None or ip_addresses == "" or len(ip_addresses) == 0:
+        if ip_addresses is None or ip_addresses == "":
             print("ERROR: Must enter one or multiple IP addresses")
         else:
             for ip in ip_addresses:
@@ -301,10 +301,22 @@ class TorSeeker:
         return self.exit_relays
 
 
-def print_relay_info(type, relays):
-    print(f"{type}")
-    print("-" * len(type))
-    if len(relays) > 0:
+def print_relay_info(relays, relay_type=None):
+    """Prints to stdout the information about the Tor relays.
+
+    :param relays: a list of TorNode objects
+    :type: list
+
+    :param relay_type: a optional string identifying the type of Tor relays stored
+                       in the list to print to stdout
+    :type: str
+    """
+
+    if relay_type is not None and relay_type != "":
+        print(f"{relay_type}")
+        print("-" * len(relay_type))
+
+    if relays:
         for relay in relays:
             print(relay)
     else:
@@ -393,9 +405,9 @@ def main():
         print("\n")
 
         if args.details:
-            print_relay_info("GUARD RELAYS", tor_seeker.get_guard_relays())
-            print_relay_info("MIDDLE RELAYS", tor_seeker.get_middle_relays())
-            print_relay_info("EXIT RELAYS", tor_seeker.get_exit_relays())
+            print_relay_info(tor_seeker.get_guard_relays(), "GUARD RELAYS")
+            print_relay_info(tor_seeker.get_middle_relays(), "MIDDLE RELAYS")
+            print_relay_info(tor_seeker.get_exit_relays(), "EXIT RELAYS")
     else:
         print()
 
