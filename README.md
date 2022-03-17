@@ -35,8 +35,6 @@ Synopsis
 
 To view the different options supported, execute `torseeker` with `-h` or `--help` option:
 
-.. code-block:: console
-
     usage: torseeker [-h] [-d] [-v] (-c  | --ip  [...])
 
     A tool used to query information about Tor relays by using a two 
@@ -51,7 +49,7 @@ To view the different options supported, execute `torseeker` with `-h` or `--hel
 
 
 Query Tor relays by Country
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 The following example shows how to use `-c` option with the two letter country code for Costa Rica: 
 
@@ -116,7 +114,7 @@ Using the same command and specify the `-d` option to get additional information
 
 
 Query Tor relays via IP address
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
 The following example shows how to use `--ip` option with the two Tor relay IP addresses: 
 
