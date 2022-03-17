@@ -189,14 +189,14 @@ Here is an example of how you would use it with the Python interactive interpret
 
 
 Contributions
--------------
+=============
 
 1. Check for open issues before submitting a feature or bug.
 2. Create a new issue to start a discussion around a new feature or a bug.
 
 
 License
--------
+=======
 
 The MIT License
 

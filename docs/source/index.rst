@@ -15,7 +15,9 @@ Release v\ |version|.
    installation
    command_line
    python_module
-   torseeker
+   contributions
+   license
+   torseeker_pydocs
 
 
 Indices and tables 
