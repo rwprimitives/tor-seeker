@@ -18,7 +18,7 @@ import argparse
 
 # Package information
 __package__     = "torseeker"
-__version__     = "1.0.0"
+__version__     = "0.0.1"
 __license__     = "MIT"
 __author__      = "eldiablo"
 __email__       = "avsarria@gmail.com"
@@ -35,12 +35,42 @@ class TorNode:
     """
     The TorNode class defines a Tor relay.
 
-    :param raw_data: a dictionary containing information about a Tor relay
-    :type: dict
+    This class provides the ability to parse raw JSON data containing information
+    about a Tor relay. The `parse_new_data()` function consumes raw JSON data and
+    populates the following members which are accessible via this class:
+
+    * **first_seen** - The date and time when the Tor relay was first seen online\n
+    * **last_seen** - The date and time the Tor relay was last seen online
+    * **last_restarted** - The date and time the Tor relay was restarted
+    * **country** - The two letter country code the Tor relay resides
+    * **country_name** - The country name the Tor relay resides
+    * **nickname** - A name assigned to the Tor relay
+    * **ipv4** - The IP address version 4
+    * **ipv4_port** - The port number of the IPv4 address
+    * **ipv6** - The IP address version 6
+    * **ipv6_port** - The port number of the IPv6 address
+    * **raw_data** - The raw JSON data about the Tor relay
+
     """
 
-    def __init__(self, raw_data):
+    def __init__(self):
         """Constructor method.
+        """
+
+        self.raw_data_ = ""
+        self.first_seen = ""
+        self.last_seen = ""
+        self.last_restarted = ""
+        self.country = ""
+        self.country_name = ""
+        self.nickname = ""
+        self.ipv4 = ""
+        self.ipv4_port = ""
+        self.ipv6 = ""
+        self.ipv6_port = ""
+
+    def parse_raw_data(self, raw_data):
+        """Parse raw JSON data about a given Tor relay.
 
         :param raw_data: a dictionary containing information about a Tor relay
         :type: dict
@@ -178,12 +208,15 @@ class TorSeeker:
 
                 self.country_name = relay["country_name"]
 
+                tor_node = TorNode()
+                tor_node.parse_raw_data(relay)
+
                 if "Exit" in flags:
-                    self.exit_relays.append(TorNode(relay))
+                    self.exit_relays.append(tor_node)
                 if "Guard" in flags:
-                    self.guard_relays.append(TorNode(relay))
+                    self.guard_relays.append(tor_node)
                 if "Exit" not in flags and "Guard" not in flags:
-                    self.middle_relays.append(TorNode(relay))
+                    self.middle_relays.append(tor_node)
 
         return status
 
@@ -362,7 +395,7 @@ def parse_args():
     # set -c and --ip arguments as mutual exclusion
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-c", "--country",
-                       help="two letter country code of interest.",
+                       help="two letter country code of interest",
                        dest="country",
                        type=str,
                        metavar='',

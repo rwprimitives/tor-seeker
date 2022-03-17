@@ -1,23 +1,3 @@
-TorSeeker
-==========
-
-**TorSeeker** is a command line tool and a Python module that can be used to query information about Tor relays.
-
-From the command line, queries can be performed relatively easy by using a two letter country code or via one or multiple Tor IP addresses.
-
-As a Python module, **TorSeeker** offers a reasonable and easy approach for querying information about Tor relays from within your own Python script or module.
-
-Internet connection is required in order to perform Tor network queries.
-
-
-Installation
-============
-
-Installing with pip:
-
-    $ pip install torseeker
-
-
 Command Line
 ============
 
@@ -33,7 +13,7 @@ Basic Usage
 Synopsis
 --------
 
-To view the different options supported, execute `torseeker` with `-h` or `--help` option:
+To view the different options supported, execute `torseeker` with `-h` or `- -help` option:
 
 .. code-block:: console
 
@@ -51,9 +31,11 @@ To view the different options supported, execute `torseeker` with `-h` or `--hel
 
 
 Query Tor relays by Country
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+---------------------------
 
 The following example shows how to use `-c` option with the two letter country code for Costa Rica: 
+
+.. code-block:: console
 
     $ torseeker -c cr
 
@@ -73,6 +55,8 @@ The following example shows how to use `-c` option with the two letter country c
 
 
 Using the same command and specify the `-d` option to get additional information about the relays:
+
+.. code-block:: console
 
     $ torseeker -c cr -d
 
@@ -116,18 +100,19 @@ Using the same command and specify the `-d` option to get additional information
 
 
 Query Tor relays via IP address
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 
-The following example shows how to use `--ip` option with the two Tor relay IP addresses: 
+The following example shows how to use `- -ip` option with two Tor relay IP addresses: 
+
+.. code-block:: console
 
     $ torseeker --ip 138.59.18.106 190.10.8.166
-
       ______           _____           __            
      /_  __/___  _____/ ___/___  ___  / /_____  _____
       / / / __ \/ ___/\__ \/ _ \/ _ \/ //_/ _ \/ ___/
      / / / /_/ / /   ___/ /  __/  __/ ,< /  __/ /    
     /_/  \____/_/   /____/\___/\___/_/|_|\___/_/     
-        
+
     1.0.0 by eldiablo
 
     Total relays: 2
@@ -135,8 +120,9 @@ The following example shows how to use `--ip` option with the two Tor relay IP a
     Middle relays: 0
     Exit relays: 1
 
-
 Using the same command and specify the `-d` option to get additional information about the relays:
+
+.. code-block:: console
 
     $ torseeker --ip 138.59.18.106 190.10.8.166 -d
 
@@ -167,45 +153,3 @@ Using the same command and specify the `-d` option to get additional information
     EXIT RELAYS
     -----------
     190.10.8.166    | Port: 443, Nickname: Donatello, Country: Costa Rica, First seen: 2021-03-12 20:00:00, Last seen: 2022-02-13 03:00:00, Last restarted: 2022-01-04 22:48:54
-
-
-Importing as Module
-===================
-
-This section will walk through the different ways **TorSeeker** can be imported as a Python module.
-
-
-Import via Interpreter
------------------------
-
-Here is an example of how you would use it with the Python interactive interpreter:
-
-    >>> from torseeker import torseeker
-    >>> ts = torseeker.TorSeeker()
-    >>> ts = torseeker.TorSeeker()
-    >>> ts.query_relays_by_country("br")
-    1
-    >>> torseeker.print_relay_info(ts.get_exit_relays())
-    187.20.55.213   | Port: 9090, Nickname: arbitrium, Country: Brazil, First seen: 2017-08-08 19:00:00, Last seen: 2022-02-21 20:00:00, Last restarted: 2022-01-31 22:07:13
-    189.84.21.44    | Port: 443, Nickname: tauro, Country: Brazil, First seen: 2016-03-23 17:00:00, Last seen: 2022-02-21 20:00:00, Last restarted: 2022-02-03 14:16:15
-
-
-Contributions
--------------
-
-1. Check for open issues before submitting a feature or bug.
-2. Create a new issue to start a discussion around a new feature or a bug.
-
-
-License
--------
-
-The MIT License
-
-Copyright (c) 2022 rwprimitives
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

@@ -25,6 +25,8 @@ uninstall-deb:
 	sudo dpkg -r python3-torseeker
 
 clean:
+	rm -rf build
+	rm -rf docs/build
 	rm -rf src/*.egg-info
 	rm -rf deb_dist
 	rm -rf dist
