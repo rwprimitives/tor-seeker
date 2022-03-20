@@ -3,9 +3,12 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-TorSeeker: Command Line Tor Query
-=================================
-Release v\ |version|.
+.. figure:: _static/torseeker_text.png
+
+\ |version| by eldiablo
+
+An easy to use command line tool and Python module for querying information about Tor relays.
+
 
 .. toctree::
    :maxdepth: 2

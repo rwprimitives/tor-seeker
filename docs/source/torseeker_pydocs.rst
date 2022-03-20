@@ -1,20 +1,20 @@
-Documentation
-=============
+API Guide
+=========
 
 
 The TorSeeker class
---------------------------
+-------------------
 
 .. automodule:: torseeker.TorSeeker
     :members:
-    :undoc-members:
+    :imported-members:
     :show-inheritance:
 
 
 The TorNode class
---------------------------
+-------------------
 
 .. automodule:: torseeker.TorNode
     :members:
-    :undoc-members:
+    :imported-members:
     :show-inheritance:

@@ -12,6 +12,7 @@
 #
 
 import json
+import re
 import requests
 import argparse
 
@@ -57,7 +58,7 @@ class TorNode:
         """Constructor method.
         """
 
-        self.raw_data_ = ""
+        self.raw_data = ""
         self.first_seen = ""
         self.last_seen = ""
         self.last_restarted = ""
@@ -76,7 +77,7 @@ class TorNode:
         :type: dict
         """
 
-        self.raw_data_ = raw_data
+        self.raw_data = raw_data
         self.first_seen = raw_data["first_seen"]
         self.last_seen = raw_data["last_seen"]
         self.last_restarted = raw_data["last_restarted"]
@@ -122,6 +123,10 @@ class TorSeeker:
     Once a query is performed, Tor relays are stored in separate lists based on
     the type of relay, ie: Guard, Middle or Exit.
 
+    Logging is available to display error messages encountered during the process.
+    However, logging is disabled by default. Use the function set_logging() to
+    enable logging if desired.
+
     :param country: optional two letter country code
     :type: str
     """
@@ -156,6 +161,9 @@ class TorSeeker:
                      "TV", "UG", "UA", "AE", "GB", "UM", "US", "UY", "UZ", "VU",
                      "VE", "VN", "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
 
+    IPV4_REGEX = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+
+
     def __init__(self, country=None):
         """Constructor method.
 
@@ -170,6 +178,17 @@ class TorSeeker:
         self.guard_relays = []
         self.middle_relays = []
         self.exit_relays = []
+        self._is_logging = False
+        self.ipv4_re = re.compile(self.IPV4_REGEX)
+
+    def _loge(self, message):
+        if self._is_logging:
+            print(f"ERROR: {message}")
+
+    def _is_ipv4(self, ipv4):
+        if self.ipv4_re.match(ipv4):
+            return True
+        return False
 
     def _http_request(self, url, params, timeout=10):
         content = ""
@@ -180,18 +199,18 @@ class TorSeeker:
                 if response.status_code == 200:
                     content = response.text
                 else:
-                    print("ERROR: Failed to perform query.")
+                    self._loge("Failed to perform query.")
 
             except requests.exceptions.HTTPError:
-                print("ERROR: Invalid response")
+                self._loge("Invalid response")
             except requests.exceptions.ConnectionError:
-                print("ERROR: Failed to establish connection")
+                self._loge("Failed to establish connection")
             except requests.exceptions.TooManyRedirects:
-                print("ERROR: Tor query URL is no longer  valid")
+                self._loge("Tor query URL is no longer valid")
             except requests.exceptions.Timeout:
-                print("ERROR: Request timed out")
+                self._loge("Request timed out")
             except requests.exceptions.RequestException:
-                print("ERROR: An unforseen error has occurred")
+                self._loge("An unforseen error has occurred")
 
         return content
 
@@ -199,17 +218,17 @@ class TorSeeker:
         status = 0
 
         if json_data is None or json_data == "":
-            print("ERROR: No tor relays are available")
-            status = -1
+            self._loge("No tor relays are available")
         else:
             for relay in json_data["relays"]:
                 flags = relay["flags"]
-                self.all_relays.append(relay)
 
                 self.country_name = relay["country_name"]
 
                 tor_node = TorNode()
                 tor_node.parse_raw_data(relay)
+
+                self.all_relays.append(tor_node)
 
                 if "Exit" in flags:
                     self.exit_relays.append(tor_node)
@@ -218,23 +237,39 @@ class TorSeeker:
                 if "Exit" not in flags and "Guard" not in flags:
                     self.middle_relays.append(tor_node)
 
-        return status
-
-    def _query(self, params):
-        status = 0
-        raw_data = self._http_request(TorSeeker.TOR_QUERY_URL, params)
-
-        if raw_data:
-            self.json_data = json.loads(raw_data)
-            self._parse_relays(self.json_data)
             status = 1
 
         return status
 
+    def _query(self, params):
+        status = 0
+        json_data = ""
+
+        raw_data = self._http_request(TorSeeker.TOR_QUERY_URL, params)
+
+        if raw_data:
+            try:
+                json_data = json.loads(raw_data)
+                status = self._parse_relays(json_data)
+            except json.JSONDecodeError:
+                self._loge("The JSON data acquired is invalid")
+
+        return status
+
+    def set_logging(self, state):
+        """Enable logging to stdout.
+
+        :param state: True enables logging, False disables logging
+        :type: bool
+        """
+        self._is_logging = state
+
     def query_relays_by_country(self, country=None):
         """Query for Tor relays based a two letter country code.
         This function performs input validation and verifies the
-        two letter country code is valid.
+        two letter country code is valid. If 0 is returned, then
+        the country code specified is invalid or there are no Tor
+        relays located in that country.
 
         :param country: a two letter country code. This is optional if a country
                         code was defined via the constructor of this class
@@ -251,7 +286,7 @@ class TorSeeker:
             country = self.country
 
         if country == "" or len(country) != 2 or country.upper() not in self.COUNTRY_CODES:
-            print("ERROR: Must enter a valid country code")
+            self._loge("Must enter a valid country code")
         else:
             params = f"search=country:{country}"
             ret = self._query(params)
@@ -259,14 +294,16 @@ class TorSeeker:
             if ret:
                 status = 1
             else:
-                print(f"ERROR: Failed to seek tor data for country code {country}")
+                self._loge(f"Failed to seek tor data for country code '{country}'")
 
         return status
 
     def query_relays_by_ip(self, ip_addresses=None):
         """Query for Tor relays based on one or multiple Tor IP addresses.
-        This functions performs some input validation, but does not verify
-        that the IP addresses provided are valid IPv4 or IPv6 format.
+        This functions performs input validation to verify that the IP
+        addresses provided are valid IPv4 format. If 0 is returned, then
+        the country code specified is invalid or there are no Tor relays
+        located in that country.
 
         :param ip_addresses: a list of Tor IP addresses
         :type: list
@@ -279,18 +316,21 @@ class TorSeeker:
         ret = 0
 
         if ip_addresses is None or ip_addresses == "":
-            print("ERROR: Must enter one or multiple IP addresses")
+            self._loge("Must enter one or multiple IP addresses")
         else:
             for ip in ip_addresses:
-                params = f"search={ip}"
-                ret = self._query(params)
+                if self._is_ipv4(ip):
+                    params = f"search={ip}"
+                    ret = self._query(params)
 
-                if ret:
-                    status = 1
+                    if ret:
+                        status = 1
+                    else:
+                        self._loge(f"Failed to seek tor data for IP {ip}")
+                        status = 0
+                        break
                 else:
-                    print(f"ERROR: Failed to seek tor data for IP {ip}")
-                    status = 0
-                    break
+                    self._loge(f"Invalid IP address '{ip}'")
 
         return status
 
@@ -420,6 +460,7 @@ def main():
     print()
 
     tor_seeker = TorSeeker()
+    tor_seeker.set_logging(True)
 
     if args.country:
         ret = tor_seeker.query_relays_by_country(args.country)

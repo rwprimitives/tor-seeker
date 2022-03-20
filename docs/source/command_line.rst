@@ -1,7 +1,7 @@
 Command Line
 ============
 
-This section will walk through the different ways **TorSeeker** can be used as a command line tool.
+This section walks you through the different ways **TorSeeker** can be used as a command line tool.
 
 
 Basic Usage
