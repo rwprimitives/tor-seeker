@@ -19,13 +19,13 @@ import argparse
 
 # Package information
 __package__     = "torseeker"
-__version__     = "0.0.1"
+__version__     = "1.0.1"
 __license__     = "MIT"
 __author__      = "eldiablo"
 __email__       = "avsarria@gmail.com"
 __url__         = "http://github.com/rwprimitives/tor-seeker"
 __bug_tracker__ = "https://github.com/rwprimitives/tor-seeker/issues"
-__date__        = "02/20/2022"
+__date__        = "03/20/2022"
 __copyright__   = "Copyright (c) 2022 rwprimitives"
 __description__ = "A tool used to query information about Tor relays " \
                   "by using a two letter country code or via Tor IP "  \
@@ -161,8 +161,8 @@ class TorSeeker:
                      "TV", "UG", "UA", "AE", "GB", "UM", "US", "UY", "UZ", "VU",
                      "VE", "VN", "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
 
+    # Regex for validating an IPv4 address
     IPV4_REGEX = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
-
 
     def __init__(self, country=None):
         """Constructor method.
