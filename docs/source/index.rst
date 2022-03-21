@@ -15,6 +15,7 @@ An easy to use command line tool and Python module for querying information abou
    :caption: Contents
 
    intro
+   build
    installation
    command_line
    python_module

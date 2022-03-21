@@ -10,10 +10,94 @@ As a Python module, **TorSeeker** offers a reasonable and easy approach for quer
 Internet connection is required in order to perform Tor network queries.
 
 
+Build
+=====
+
+This section covers several build aspects of the **TorSeeker** project. 
+
+
+Required Debian Packages
+------------------------
+
+The following packages are required:
+
+| Dependency         | Version           |
+|--------------------|-------------------|
+| make               | 4.2.1             |
+| python3-all        | 3.8.2-0ubuntu2    |
+| python3-venv       | 3.8.2-0ubuntu2    |
+| python3-setuptools | 45.2.0-1          |
+| dh-python          | 4.20191017ubuntu7 |
+
+    sudo apt install make dh-python python3-all python3-venv python3-setuptools
+
+
+Required PyPi Packages
+----------------------
+
+The following PyPi packages are required:
+
+| Dependency | Version | Purpose                                   |
+|------------|---------|-------------------------------------------|
+| build      | 0.7.0   | Used to build Python distribution package |
+| stdeb      | 0.10.0  | Used to build Debian source package       |
+
+    pip install build stdeb
+
+
+Optional PyPi Packages
+----------------------
+
+The following PyPi packages are optional to install:
+
+| Dependency       | Version | Purpose
+|------------------|---------|-----------------------------------|
+| flake8           | 4.0.1   | Used for checking code style      |
+| sphinx_rtd_theme | 4.4.0   | Used for generating documentation |
+
+    pip install flake8 sphinx_rtd_theme
+
+
+Build Targets
+-------------
+
+Once all of the required dependencies have been installed, **TorSeeker** provides several build targets that make it easier to build and deploy.
+
+To view the build targets supported, run the command `make help` as such:
+
+    $ make help
+
+    The following build targets are available:
+    
+    build-pip:     Generates a PIP distributions packages (ie: *.whl and *.tar.gz)
+    build-deb:     Generates a Debian Linux distribution package (ie: *.deb)
+    install-pip:   Builds and installs PIP distribution package
+    install-deb:   Builds and installs Debian distribution package
+    uninstall-pip: Uninstalls PIP distribution package
+    uninstall-deb: Uninstalls Debian distribution package
+    clean:         Removes any automatically generated files
+
+
 Installation
 ============
 
-Installing with pip:
+This section provides several methods for installing **TorSeeker**.
+
+
+From the Source
+---------------
+
+**TorSeeker** can be build and deployed directly from the source. It can be obtained as follows:
+
+    $ git clone https://github.com/rwprimitives/tor-seeker.git
+
+
+Installing from PyPi
+--------------------
+
+It is highly recommended that **TorSeeker** be installed using `pip` to ensure that the latest version is being used.
+
+To install simply run:
 
     $ pip install torseeker
 
