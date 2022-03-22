@@ -13,7 +13,6 @@ Here is an example of how you would import **TorSeeker** via the Python interact
 
     >>> from torseeker import torseeker
     >>> ts = torseeker.TorSeeker()
-    >>> ts = torseeker.TorSeeker()
     >>> ts.query_relays_by_country("br")
     1
     >>> torseeker.print_relay_info(ts.get_exit_relays())

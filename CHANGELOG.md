@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 
 ****
 
-[1.0.1] - TBD
+[1.0.1] - 03/21/2022
 --------------------
 - Added sphinx documentation
 - Updated README.md to match sphinx documentation
