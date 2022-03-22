@@ -25,7 +25,7 @@ __author__      = "eldiablo"
 __email__       = "avsarria@gmail.com"
 __url__         = "http://github.com/rwprimitives/tor-seeker"
 __bug_tracker__ = "https://github.com/rwprimitives/tor-seeker/issues"
-__date__        = "03/20/2022"
+__date__        = "03/21/2022"
 __copyright__   = "Copyright (c) 2022 rwprimitives"
 __description__ = "A tool used to query information about Tor relays " \
                   "by using a two letter country code or via Tor IP "  \
@@ -285,7 +285,8 @@ class TorSeeker:
         if country is None:
             country = self.country
 
-        if country == "" or len(country) != 2 or country.upper() not in self.COUNTRY_CODES:
+        if country is None or not isinstance(country, str) or len(country) != 2 or \
+           country.upper() not in self.COUNTRY_CODES:
             self._loge("Must enter a valid country code")
         else:
             params = f"search=country:{country}"
@@ -302,8 +303,8 @@ class TorSeeker:
         """Query for Tor relays based on one or multiple Tor IP addresses.
         This functions performs input validation to verify that the IP
         addresses provided are valid IPv4 format. If 0 is returned, then
-        the country code specified is invalid or there are no Tor relays
-        located in that country.
+        the IP addresses specified are invalid or there are no Tor relays
+        associated with those IP addresses.
 
         :param ip_addresses: a list of Tor IP addresses
         :type: list
@@ -315,8 +316,8 @@ class TorSeeker:
         status = 0
         ret = 0
 
-        if ip_addresses is None or ip_addresses == "":
-            self._loge("Must enter one or multiple IP addresses")
+        if ip_addresses is None or not isinstance(ip_addresses, list) or len(ip_addresses) == 0:
+            self._loge("Must enter one or multiple IP addresses inside a list")
         else:
             for ip in ip_addresses:
                 if self._is_ipv4(ip):
