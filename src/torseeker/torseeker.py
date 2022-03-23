@@ -214,33 +214,6 @@ class TorSeeker:
 
         return content
 
-    def _parse_relays(self, json_data):
-        status = 0
-
-        if json_data is None or json_data == "":
-            self._loge("No tor relays are available")
-        else:
-            for relay in json_data["relays"]:
-                flags = relay["flags"]
-
-                self.country_name = relay["country_name"]
-
-                tor_node = TorNode()
-                tor_node.parse_raw_data(relay)
-
-                self.all_relays.append(tor_node)
-
-                if "Exit" in flags:
-                    self.exit_relays.append(tor_node)
-                if "Guard" in flags:
-                    self.guard_relays.append(tor_node)
-                if "Exit" not in flags and "Guard" not in flags:
-                    self.middle_relays.append(tor_node)
-
-            status = 1
-
-        return status
-
     def _query(self, params):
         status = 0
         json_data = ""
@@ -253,6 +226,88 @@ class TorSeeker:
                 status = self._parse_relays(json_data)
             except json.JSONDecodeError:
                 self._loge("The JSON data acquired is invalid")
+
+        return status
+
+    def _query_relay_by_fingerprint(self, fingerprint):
+        raw_data = ""
+
+        if fingerprint is None or not isinstance(fingerprint, str) or len(fingerprint) == 0:
+            self._loge("Must provide a valid fingerprint to query for a tor relay \
+                        that's part of a family")
+        else:
+            params = f"lookup={fingerprint}"
+            raw_data = self._http_request(TorSeeker.TOR_QUERY_URL, params)
+
+        return raw_data
+
+    def _add_relay(self, raw_relay):
+        tor_node = TorNode()
+        tor_node.parse_raw_data(raw_relay)
+
+        self.all_relays.append(tor_node)
+
+        # Get the probability values for the relay
+        guard_prob = raw_relay["guard_probability"]
+        middle_prob = raw_relay["middle_probability"]
+        exit_prob = raw_relay["exit_probability"]
+
+        # A Guard relay must be stable and fast (at least 2MByte/s).
+        # If a relay does not meet those requirements, then it's demoted
+        # to be a middle relay. A Middle relay can be promoted to be a
+        # Guard relay if it meets the desired critera for Guard relays
+        if guard_prob > middle_prob:
+            self.guard_relays.append(tor_node)
+
+        if middle_prob > guard_prob:
+            self.middle_relays.append(tor_node)
+
+        # Exit relays will never be Guard or Middle relays,
+        # so only need to check if the probability is greater than zero
+        if exit_prob > 0:
+            self.exit_relays.append(tor_node)
+
+    def _parse_relays(self, json_data):
+        status = 0
+
+        if json_data is None or json_data == "":
+            self._loge("No tor relays are available")
+        else:
+            for raw_relay in json_data["relays"]:
+
+                # skip relays that are not operational
+                if not raw_relay["running"]:
+                    continue
+
+                # Get the name of the country for any relay. This is
+                # only used when querying for relays of a specific country.
+                # When querying for tor IP addresses, this is not reliable
+                # as it will be updated based on the last IP address queried
+                self.country_name = raw_relay["country_name"]
+
+                # print("=================\n")
+                # print(raw_relay)
+                # print("=================\n")
+
+                # Get the list of Tor relays that are part of a family.
+                # These relays are typically managed by the same entity.
+                # Assigning Tor relays to a family let's the Tor Project know
+                # that an entity is managing these relays and aren't trying to
+                # to intentional deanonymize users
+                effective_family = raw_relay["effective_family"]
+                if len(effective_family) > 1:
+                    for fingerprint in effective_family:
+                        raw_member_data = self._query_relay_by_fingerprint(fingerprint)
+                        member_data = json.loads(raw_member_data)
+                        for member_relay in member_data["relays"]:
+                            self._add_relay(member_relay)
+
+                else:
+                    self._add_relay(raw_relay)
+
+
+
+            status = 1
 
         return status
 
@@ -387,8 +442,9 @@ def print_relay_info(relays, relay_type=None):
     """
 
     if relay_type is not None and relay_type != "":
-        print(f"{relay_type}")
-        print("-" * len(relay_type))
+        title = f"{relay_type} [{len(relays)}]"
+        print(title)
+        print("-" * len(title))
 
     if relays:
         for relay in relays:
