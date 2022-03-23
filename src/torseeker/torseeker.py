@@ -229,18 +229,6 @@ class TorSeeker:
 
         return status
 
-    def _query_relay_by_fingerprint(self, fingerprint):
-        raw_data = ""
-
-        if fingerprint is None or not isinstance(fingerprint, str) or len(fingerprint) == 0:
-            self._loge("Must provide a valid fingerprint to query for a tor relay \
-                        that's part of a family")
-        else:
-            params = f"lookup={fingerprint}"
-            raw_data = self._http_request(TorSeeker.TOR_QUERY_URL, params)
-
-        return raw_data
-
     def _add_relay(self, raw_relay):
         tor_node = TorNode()
         tor_node.parse_raw_data(raw_relay)
@@ -285,27 +273,7 @@ class TorSeeker:
                 # as it will be updated based on the last IP address queried
                 self.country_name = raw_relay["country_name"]
 
-                # print("=================\n")
-                # print(raw_relay)
-                # print("=================\n")
-
-                # Get the list of Tor relays that are part of a family.
-                # These relays are typically managed by the same entity.
-                # Assigning Tor relays to a family let's the Tor Project know
-                # that an entity is managing these relays and aren't trying to
-                # to intentional deanonymize users
-                effective_family = raw_relay["effective_family"]
-                if len(effective_family) > 1:
-                    for fingerprint in effective_family:
-                        raw_member_data = self._query_relay_by_fingerprint(fingerprint)
-                        member_data = json.loads(raw_member_data)
-                        for member_relay in member_data["relays"]:
-                            self._add_relay(member_relay)
-
-                else:
-                    self._add_relay(raw_relay)
-
-
+                self._add_relay(raw_relay)
 
             status = 1
 
