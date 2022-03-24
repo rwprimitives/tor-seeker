@@ -19,13 +19,13 @@ import argparse
 
 # Package information
 __package__     = "torseeker"
-__version__     = "1.0.1"
+__version__     = "1.0.2"
 __license__     = "MIT"
 __author__      = "eldiablo"
 __email__       = "avsarria@gmail.com"
 __url__         = "http://github.com/rwprimitives/tor-seeker"
 __bug_tracker__ = "https://github.com/rwprimitives/tor-seeker/issues"
-__date__        = "03/21/2022"
+__date__        = "03/23/2022"
 __copyright__   = "Copyright (c) 2022 rwprimitives"
 __description__ = "A tool used to query information about Tor relays " \
                   "by using a two letter country code or via Tor IP "  \
@@ -480,8 +480,7 @@ def main():
 
     args = parse_args()
 
-    print(get_banner())
-    print(f"{__version__} by {__author__}")
+    print(f"TorSeeker v{__version__} by {__author__}")
     print()
 
     tor_seeker = TorSeeker()
