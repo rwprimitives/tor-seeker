@@ -18,7 +18,7 @@ An easy to use command line tool and Python module for querying information abou
    build
    installation
    command_line
-   python_module
+   develop
    contributions
    license
    torseeker_pydocs

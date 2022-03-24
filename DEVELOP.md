@@ -1,5 +1,5 @@
-Importing as Module
-===================
+TorSeeker For Developers
+========================
 
 This section will walk through the different ways **TorSeeker** can be imported as a Python module.
 
@@ -7,9 +7,7 @@ This section will walk through the different ways **TorSeeker** can be imported 
 Import via Interpreter
 -----------------------
 
-Here is an example of how you would import **TorSeeker** via the Python interactive interpreter:
-
-.. code-block:: console
+Here is an example of how you would use it with the Python interactive interpreter:
 
     >>> from torseeker import torseeker
     >>> ts = torseeker.TorSeeker()
@@ -24,8 +22,6 @@ Importing via Python Script
 ---------------------------
 
 The following example shows how to import **TorSeeker** into your own Python script and perform queries:
-
-.. code-block:: python
 
     #!/usr/bin/env python3
 
@@ -45,8 +41,6 @@ The following example shows how to import **TorSeeker** into your own Python scr
 
 
 Below is the output of the script above:
-
-.. code-block:: console
 
     138.59.18.106   | Port: 443, Nickname: Albis, Country: Costa Rica, First seen: 2019-02-20 21:00:00, Last seen: 2022-03-20 18:00:00, Last restarted: 2022-02-24 02:11:04
     138.59.18.105   | Port: 88, Nickname: TheMind, Country: Costa Rica, First seen: 2019-02-20 14:00:00, Last seen: 2022-03-20 18:00:00, Last restarted: 2022-02-17 06:16:04
