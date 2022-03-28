@@ -1,0 +1,1 @@
+The TorSeeker logo is released under the MIT license.
