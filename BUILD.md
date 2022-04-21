@@ -11,13 +11,14 @@ The following packages are required:
 
 | Dependency         | Version           |
 |--------------------|-------------------|
+| debhelper          | 12.10ubuntu1      |
+| dh-python          | 4.20191017ubuntu7 |
 | make               | 4.2.1             |
 | python3-all        | 3.8.2-0ubuntu2    |
 | python3-venv       | 3.8.2-0ubuntu2    |
 | python3-setuptools | 45.2.0-1          |
-| dh-python          | 4.20191017ubuntu7 |
 
-    sudo apt install make dh-python python3-all python3-venv python3-setuptools
+    sudo apt install debhelper dh-python make python3-all python3-venv python3-setuptools
 
 
 Required PyPi Packages
