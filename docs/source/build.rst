@@ -14,6 +14,10 @@ The following packages are required:
 
    * - Dependency
      - Version
+   * - debhelper
+     - 12.10ubuntu1
+   * - dh-python
+     - 4.20191017ubuntu7
    * - make
      - 4.2.1
    * - python3-all
@@ -22,8 +26,9 @@ The following packages are required:
      - 3.8.2-0ubuntu2
    * - python3-setuptools
      - 45.2.0-1
-   * - dh-python
-     - 4.20191017ubuntu7
+
+
+Copy and paste the following command on your terminal:
 
 .. code-block:: console
 
@@ -48,6 +53,9 @@ The following PyPi packages are required:
      - 0.10.0
      - Used to build Debian source package
 
+
+Copy and paste the following command on your terminal:
+
 .. code-block:: console
 
     pip install build stdeb
@@ -70,6 +78,9 @@ The following PyPi packages are optional to install:
    * - sphinx_rtd_theme
      - 4.4.0
      - Used for generating documentation
+
+
+Copy and paste the following command on your terminal:
 
 .. code-block:: console
 
